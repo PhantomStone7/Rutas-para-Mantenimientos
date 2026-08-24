@@ -4,204 +4,431 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Ruta de Entregas</title>
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
     <style>
-        body { margin: 0; font-family: Arial, sans-serif; }
-        #map { height: 100vh; width: 100vw; }
-        .delivered { background-color: green; color: white; padding: 5px; border-radius: 5px; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #map {
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .delivered {
+            background-color: green;
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+        }
     </style>
 </head>
+
 <body>
+
     <div id="map"></div>
 
     <script>
-        var map = L.map('map', { zoomControl: true }).setView([13.3103, -87.1848], 12);
-        
-        L.tileLayer('https://{s}.tile.jawg.io/jawg-sunny/{z}/{x}/{y}{r}.png?access-token=nvyWYYOXIkVSjIb3dUHvOzMiPkhJSlcoiKcwnpRNDyJ8d24l3H4BNlAvODieirpq', {
-            attribution: '&copy; <a href="https://www.jawg.io">Jawg Maps</a> contributors'
-        }).addTo(map);
+
+        // =========================================================
+        // MAPA
+        // =========================================================
+
+        var map = L.map('map', {
+            zoomControl: true
+        }).setView([13.3103, -87.1848], 12);
+
+
+        L.tileLayer(
+            'https://{s}.tile.jawg.io/jawg-sunny/{z}/{x}/{y}{r}.png?access-token=nvyWYYOXIkVSjIb3dUHvOzMiPkhJSlcoiKcwnpRNDyJ8d24l3H4BNlAvODieirpq',
+            {
+                attribution: '&copy; <a href="https://www.jawg.io">Jawg Maps</a> contributors'
+            }
+        ).addTo(map);
+
+
+        // =========================================================
+        // PUNTOS DE ENTREGA
+        // =========================================================
 
         var puntos = [
-    { coords: [13.303461118902984, -87.19459068067735], name: "acosa" },
-    { coords: [13.30413620430941, -87.18764024099956], name: "agroin y bomohsa" },
-    { coords: [13.303218642111691, -87.19569580534638], name: "el compadre" },
-    { coords: [13.424350479614624, -87.44734802068893], name: "el compadre sanlo" },
-    { coords: [13.4323800171738, -87.45079744767325], name: "el titan" },
-    { coords: [13.413015423139488, -87.44278849185308], name: "anibals" },
-    { coords: [13.305578183091335, -87.1914016008789], name: "beloclinic" },
-    { coords: [13.30136666386487, -87.19049822508154], name: "cabro blanco" },
-    { coords: [13.311685571063359, -87.15597554767454], name: "cadelga" },
-    { coords: [13.304616798338225, -87.19261269347237], name: "cami" },
-    { coords: [13.309997962666971, -87.18046688815123], name: "central de mangueras" },
-    { coords: [13.30942929317229, -87.18212983201781], name: "circl k" },
-    { coords: [13.318737109492698, -87.15750086562247], name: "comercial miranda" },
-    { coords: [13.202118313535872, -87.37365394767559], name: "comercial monjaras" },
-    { coords: [13.24075271082672, -87.35137680430236], name: "las cumbas" },
-    { coords: [13.431083409929364, -87.44871324767334], name: "wolozny" },
-    { coords: [13.463132198153158, -87.4526653136648], name: "puma pacific" },
-    { coords: [13.303658829679582, -87.19391344352921], name: "siman" },
-    { coords: [13.333041924939447, -87.1359885783617], name: "herco ya" },
-    { coords: [13.313800836797892, -87.17013860346461], name: "filtros americanos" },
-    { coords: [13.303955657665735, -87.19366081567743], name: "gallo mas" },
-    { coords: [13.308458518352433, -87.17867616999054], name: "puma roady" },
-    { coords: [13.30812001287249, -87.1919388323308], name: "hospital vet" },
-    { coords: [13.309852288651735, -87.18807793836139], name: "hotel la fuente" },
-    { coords: [13.533315716599773, -87.4982074225957], name: "hotel vista hermosa" },
-    { coords: [13.435817062918549, -87.44574137650919], name: "hotel y club morazan" },
-    { coords: [13.304538498951123, -87.19014709735735], name: "imagenes" },
-    { coords: [13.307053797509457, -87.18976599525699], name: "americana lee" },
-    { coords: [13.316994448417113, -87.16235210719783], name: "jardines y piscinas" },
-    { coords: [13.42358294548701, -87.44798586698654], name: "curacao cash y motomundo" },
-    { coords: [13.304281841042236, -87.19300811759], name: "la curacao" },
-    { coords: [13.309908707263562, -87.18963092974742], name: "la tlaqueria" },
-    { coords: [13.309992164207845, -87.18217327418344], name: "lc 19" },
-    { coords: [13.304677792948597, -87.1785962857212], name: "llantisur" },
-    { coords: [13.304614301781779, -87.17858832807984], name: "mados" },
-    { coords: [13.304180781998808, -87.19479399601614], name: "molineros" },
-    { coords: [13.305936116503997, -87.19175477186033], name: "nippon" },
-    { coords: [13.303906179874629, -87.19332188118035], name: "payless" },
-    { coords: [13.433441851786752, -87.45073010349367], name: "payless sl" },
-    { coords: [13.309752493628446, -87.1845839765105], name: "pizza hut" },
-    { coords: [13.309969227691488, -87.18255573418237], name: "popeyes" },
-    { coords: [13.309129351715269, -87.18812677632803], name: "pronto" },
-    { coords: [13.306161380433915, -87.18961939045258], name: "puma" },
-    { coords: [13.31021984323652, -87.1791442188386], name: "pupusas" },
-    { coords: [13.303806432532522, -87.17899959000276], name: "refripartes" },
-    { coords: [13.307884746946261, -87.18196029594453], name: "repuestos del sur" },
-    { coords: [13.30410665620039, -87.18219526160274], name: "blue agave" },
-    { coords: [13.422632437342292, -87.40916366116558], name: "briwsas del golfo" },
-    { coords: [13.310065198822633, -87.18499432925447], name: "el asador" },
-    { coords: [13.538350294046632, -87.49108263047702], name: "puma panamericana" },
-    { coords: [13.299912057694813, -87.19312630251534], name: "siman 3" },
-    { coords: [13.311643311654164, -87.15978107651048], name: "south" },
-    { coords: [13.433347069998977, -87.4506688591338], name: "la colonia sl" },
-    { coords: [13.301462633211829, -87.19398258847876], name: "la colonia cho" },
-    { coords: [13.31204244739805, -87.17494705806301], name: "motomundo" },
-    { coords: [13.309061314581871, -87.18950165690377], name: "uth" },
-    { coords: [13.539829579620793, -87.46996077993936], name: "uno nacaome" },
-    { coords: [13.313574170491734, -87.17112294767448], name: "xlpore" },
-    { coords: [13.307253764757428, -87.18525707651048], name: "yego" },
-    { coords: [13.315332845661644, -87.16643552313292], name: "vida abundante" },
-    { coords: [13.30298275709716, -87.19380842730877], name: "la nueva moda" },
-    { coords: [13.30586117282613, -87.19325876116679], name: "almacenes del sur" },
-    { coords: [13.291236855718825, -87.1780380544296], name: "cyme" },
-    { coords: [13.427368229945394, -87.44627783942092], name: "elite shoes" },
-    { coords: [13.290186736064229, -87.29555344582323], name: "texaco marcovia" },
-    { coords: [13.309320240478668, -87.18641705425215], name: "siman 2" },
-    { coords: [13.309995686117084, -87.17900728540175], name: "siman 4" },
-    { coords: [13.31392658704082, -87.1683557169871], name: "herco" },
-    { coords: [13.440000672112287, -87.45129117465765], name: "herco sl" },
-    { coords: [13.302764267283141, -87.18380565068593], name: "puma aterrizaje" },
-    { coords: [13.292247966847803, -87.17814269000286], name: "jicaral" },
-    { coords: [13.433359628149962, -87.45075723047813], name: "pizza" },
-    { coords: [13.310480352684968, -87.18409305931527], name: "promaco" },
-    { coords: [13.454500099542173, -87.45369307465754], name: "alto verde" },
-    { coords: [13.307323641573678, -87.18724243651246], name: "suministros electricos" },
-    { coords: [13.312022334985375, -87.17481462285883], name: "super repuestos" },
-    { coords: [13.31307891634337, -87.17689544582308], name: "sycom" },
-    { coords: [13.302866950865912, -87.19513861698726], name: "monjaras 3" },
-    { coords: [13.309836986450524, -87.17864356772323], name: "corporacion flores" },
-    { coords: [13.31811169066242, -87.15933281884864], name: "ferromax" },
-    { coords: [13.342698161665156, -87.25304243603343], name: "puma" },
-    { coords: [13.309088684696013, -87.18499476458007], name: "jays" },
-    { coords: [13.309249323855878, -87.18660032919377], name: "macdel" },
-    { coords: [13.317508939965883, -87.16081683335997], name: "moto repuestos" },
-    { coords: [13.314741742561319, -87.16772963686344], name: "jireh" },
-    { coords: [13.423512801339173, -87.44726783232969], name: "movesa sl" },
-    { coords: [13.29501255660685, -87.18497123371455], name: "san francisco" },
-    { coords: [13.423027801466143, -87.44712279555598], name: "tropigas" },
-    { coords: [13.310071434137726, -87.16011124767448], name: "unicah" },
-    { coords: [13.431440518245253, -87.449773824381], name: "veprovar" }
-];
-   
-var completedPoints = JSON.parse(localStorage.getItem('completedPoints') || '[]');
 
-var markers = puntos.map((point, index) => {
+            { coords: [13.303461118902984, -87.19459068067735], name: "acosa" },
+            { coords: [13.30413620430941, -87.18764024099956], name: "agroin y bomohsa" },
+            { coords: [13.303218642111691, -87.19569580534638], name: "el compadre" },
+            { coords: [13.424350479614624, -87.44734802068893], name: "el compadre sanlo" },
+            { coords: [13.4323800171738, -87.45079744767325], name: "el titan" },
+            { coords: [13.413015423139488, -87.44278849185308], name: "anibals" },
+            { coords: [13.305578183091335, -87.1914016008789], name: "beloclinic" },
+            { coords: [13.30136666386487, -87.19049822508154], name: "cabro blanco" },
+            { coords: [13.311685571063359, -87.15597554767454], name: "cadelga" },
+            { coords: [13.304616798338225, -87.19261269347237], name: "cami" },
+            { coords: [13.309997962666971, -87.18046688815123], name: "central de mangueras" },
+            { coords: [13.30942929317229, -87.18212983201781], name: "circl k" },
+            { coords: [13.318737109492698, -87.15750086562247], name: "comercial miranda" },
+            { coords: [13.202118313535872, -87.37365394767559], name: "comercial monjaras" },
+            { coords: [13.24075271082672, -87.35137680430236], name: "las cumbas" },
+            { coords: [13.431083409929364, -87.44871324767334], name: "wolozny" },
+            { coords: [13.463132198153158, -87.4526653136648], name: "puma pacific" },
+            { coords: [13.303658829679582, -87.19391344352921], name: "siman" },
+            { coords: [13.333041924939447, -87.1359885783617], name: "herco ya" },
+            { coords: [13.313800836797892, -87.17013860346461], name: "filtros americanos" },
+            { coords: [13.303955657665735, -87.19366081567743], name: "gallo mas" },
+            { coords: [13.308458518352433, -87.17867616999054], name: "puma roady" },
+            { coords: [13.30812001287249, -87.1919388323308], name: "hospital vet" },
+            { coords: [13.309852288651735, -87.18807793836139], name: "hotel la fuente" },
+            { coords: [13.533315716599773, -87.4982074225957], name: "hotel vista hermosa" },
+            { coords: [13.435817062918549, -87.44574137650919], name: "hotel y club morazan" },
+            { coords: [13.304538498951123, -87.19014709735735], name: "imagenes" },
+            { coords: [13.307053797509457, -87.18976599525699], name: "americana lee" },
+            { coords: [13.316994448417113, -87.16235210719783], name: "jardines y piscinas" },
+            { coords: [13.42358294548701, -87.44798586698654], name: "curacao cash y motomundo" },
+            { coords: [13.304281841042236, -87.19300811759], name: "la curacao" },
+            { coords: [13.309908707263562, -87.18963092974742], name: "la tlaqueria" },
+            { coords: [13.309992164207845, -87.18217327418344], name: "lc 19" },
+            { coords: [13.304677792948597, -87.1785962857212], name: "llantisur" },
+            { coords: [13.304614301781779, -87.17858832807984], name: "mados" },
+            { coords: [13.304180781998808, -87.19479399601614], name: "molineros" },
+            { coords: [13.305936116503997, -87.19175477186033], name: "nippon" },
+            { coords: [13.303906179874629, -87.19332188118035], name: "payless" },
+            { coords: [13.433441851786752, -87.45073010349367], name: "payless sl" },
+            { coords: [13.309752493628446, -87.1845839765105], name: "pizza hut" },
+            { coords: [13.309969227691488, -87.18255573418237], name: "popeyes" },
+            { coords: [13.309129351715269, -87.18812677632803], name: "pronto" },
+            { coords: [13.306161380433915, -87.18961939045258], name: "puma" },
+            { coords: [13.31021984323652, -87.1791442188386], name: "pupusas" },
+            { coords: [13.303806432532522, -87.17899959000276], name: "refripartes" },
+            { coords: [13.307884746946261, -87.18196029594453], name: "repuestos del sur" },
+            { coords: [13.30410665620039, -87.18219526160274], name: "blue agave" },
+            { coords: [13.422632437342292, -87.40916366116558], name: "briwsas del golfo" },
+            { coords: [13.310065198822633, -87.18499432925447], name: "el asador" },
+            { coords: [13.538350294046632, -87.49108263047702], name: "puma panamericana" },
+            { coords: [13.299912057694813, -87.19312630251534], name: "siman 3" },
+            { coords: [13.311643311654164, -87.15978107651048], name: "south" },
+            { coords: [13.433347069998977, -87.4506688591338], name: "la colonia sl" },
+            { coords: [13.301462633211829, -87.19398258847876], name: "la colonia cho" },
+            { coords: [13.31204244739805, -87.17494705806301], name: "motomundo" },
+            { coords: [13.309061314581871, -87.18950165690377], name: "uth" },
+            { coords: [13.539829579620793, -87.46996077993936], name: "uno nacaome" },
+            { coords: [13.313574170491734, -87.17112294767448], name: "xlpore" },
+            { coords: [13.307253764757428, -87.18525707651048], name: "yego" },
+            { coords: [13.315332845661644, -87.16643552313292], name: "vida abundante" },
+            { coords: [13.30298275709716, -87.19380842730877], name: "la nueva moda" },
+            { coords: [13.30586117282613, -87.19325876116679], name: "almacenes del sur" },
+            { coords: [13.291236855718825, -87.1780380544296], name: "cyme" },
+            { coords: [13.427368229945394, -87.44627783942092], name: "elite shoes" },
+            { coords: [13.290186736064229, -87.29555344582323], name: "texaco marcovia" },
+            { coords: [13.309320240478668, -87.18641705425215], name: "siman 2" },
+            { coords: [13.309995686117084, -87.17900728540175], name: "siman 4" },
+            { coords: [13.31392658704082, -87.1683557169871], name: "herco" },
+            { coords: [13.440000672112287, -87.45129117465765], name: "herco sl" },
+            { coords: [13.302764267283141, -87.18380565068593], name: "puma aterrizaje" },
+            { coords: [13.292247966847803, -87.17814269000286], name: "jicaral" },
+            { coords: [13.433359628149962, -87.45075723047813], name: "pizza" },
+            { coords: [13.310480352684968, -87.18409305931527], name: "promaco" },
+            { coords: [13.454500099542173, -87.45369307465754], name: "alto verde" },
+            { coords: [13.307323641573678, -87.18724243651246], name: "suministros electricos" },
+            { coords: [13.312022334985375, -87.17481462285883], name: "super repuestos" },
+            { coords: [13.31307891634337, -87.17689544582308], name: "sycom" },
+            { coords: [13.302866950865912, -87.19513861698726], name: "monjaras 3" },
+            { coords: [13.309836986450524, -87.17864356772323], name: "corporacion flores" },
+            { coords: [13.31811169066242, -87.15933281884864], name: "ferromax" },
+            { coords: [13.342698161665156, -87.25304243603343], name: "puma" },
+            { coords: [13.309088684696013, -87.18499476458007], name: "jays" },
+            { coords: [13.309249323855878, -87.18660032919377], name: "macdel" },
+            { coords: [13.317508939965883, -87.16081683335997], name: "moto repuestos" },
+            { coords: [13.314741742561319, -87.16772963686344], name: "jireh" },
+            { coords: [13.423512801339173, -87.44726783232969], name: "movesa sl" },
+            { coords: [13.29501255660685, -87.18497123371455], name: "san francisco" },
+            { coords: [13.423027801466143, -87.44712279555598], name: "tropigas" },
+            { coords: [13.310071434137726, -87.16011124767448], name: "unicah" },
+            { coords: [13.431440518245253, -87.449773824381], name: "veprovar" }
 
-    var pointId = `${point.name}_${point.coords[0]}_${point.coords[1]}`;
+        ];
 
-    // Si ya fue marcado como hecho, no mostramos el marcador
-    if (completedPoints.includes(pointId)) {
-        return null;
-    }
 
-    var marker = L.marker(point.coords).addTo(map);
+        // =========================================================
+        // ENVÍOS COMPLETADOS
+        // =========================================================
 
-    marker.bindPopup(`
-        <label for='locationName${index}'>Nombre del Lugar:</label>
-        <input type='text' id='locationName${index}' value='${point.name}' oninput='updateName(${index}, this.value)'><br>
-        <button onclick='markDelivered(${index})'>Marcar como hecho</button>
-    `);
-
-    marker.pointId = pointId;
-
-    return marker;
-});
-        });
-
-        function updateName(index, name) {
-            puntos[index].name = name;
-        }
-
-   function markDelivered(index) 
-
-    if (markers[index]) {
-
-        var pointId = markers[index].pointId;
-
-        // Guardar como completado
-        completedPoints.push(pointId);
-        localStorage.setItem(
-            'completedPoints',
-            JSON.stringify(completedPoints)
+        // Cargar los envíos que ya fueron marcados como hechos
+        var completedPoints = JSON.parse(
+            localStorage.getItem('completedPoints') || '[]'
         );
 
-        // Eliminar del mapa
-        map.removeLayer(markers[index]);
-        markers[index] = null;
 
-        updateRoute();
-    }
+        // =========================================================
+        // CREAR MARCADORES
+        // =========================================================
+
+        var markers = puntos.map((point, index) => {
+
+            // Identificador único del lugar
+            var pointId =
+                point.name +
+                "_" +
+                point.coords[0] +
+                "_" +
+                point.coords[1];
+
+
+            // Si ya está completado, no mostrarlo
+            if (completedPoints.includes(pointId)) {
+                return null;
+            }
+
+
+            var marker = L.marker(point.coords).addTo(map);
+
+
+            marker.pointId = pointId;
+
+
+            marker.bindPopup(`
+                <label for="locationName${index}">
+                    Nombre del Lugar:
+                </label>
+
+                <input
+                    type="text"
+                    id="locationName${index}"
+                    value="${point.name}"
+                    oninput="updateName(${index}, this.value)"
+                >
+
+                <br><br>
+
+                <button onclick="markDelivered(${index})">
+                    Marcar como hecho
+                </button>
+            `);
+
+
+            return marker;
+
+        });
+
+
+        // =========================================================
+        // ACTUALIZAR NOMBRE
+        // =========================================================
+
+        function updateName(index, name) {
+
+            puntos[index].name = name;
+
         }
 
+
+        // =========================================================
+        // MARCAR ENVÍO COMO HECHO
+        // =========================================================
+
+        function markDelivered(index) {
+
+            var marker = markers[index];
+
+
+            if (!marker) {
+                return;
+            }
+
+
+            // Identificador del punto
+            var pointId = marker.pointId;
+
+
+            // Evitar duplicados
+            if (!completedPoints.includes(pointId)) {
+
+                completedPoints.push(pointId);
+
+
+                localStorage.setItem(
+                    'completedPoints',
+                    JSON.stringify(completedPoints)
+                );
+
+            }
+
+
+            // Eliminar marcador del mapa
+            map.removeLayer(marker);
+
+
+            markers[index] = null;
+
+
+            // Actualizar ruta
+            updateRoute();
+
+        }
+
+
+        // =========================================================
+        // UBICACIÓN DEL USUARIO
+        // =========================================================
+
         var userMarker = null;
+
         var userPosition = null;
+
         var routeLine = null;
 
+
+        // =========================================================
+        // ACTUALIZAR RUTA
+        // =========================================================
+
         function updateRoute() {
-            if (!userPosition) return;
-            var remainingPoints = markers.filter(marker => marker !== null).map(marker => marker.getLatLng());
-            if (remainingPoints.length === 0) return;
-            
-            var coordinates = [[userPosition[1], userPosition[0]], ...remainingPoints.map(p => [p.lng, p.lat])].join(';');
-            var osrmRouteUrl = `https://router.project-osrm.org/route/v1/driving/${coordinates}?overview=full&geometries=geojson`;
-            
+
+            if (!userPosition) {
+                return;
+            }
+
+
+            var remainingPoints = markers
+                .filter(marker => marker !== null)
+                .map(marker => marker.getLatLng());
+
+
+            if (remainingPoints.length === 0) {
+
+                if (routeLine) {
+                    map.removeLayer(routeLine);
+                    routeLine = null;
+                }
+
+                return;
+
+            }
+
+
+            var coordinates = [
+                [userPosition[1], userPosition[0]],
+                ...remainingPoints.map(
+                    p => [p.lng, p.lat]
+                )
+            ].join(';');
+
+
+            var osrmRouteUrl =
+                `https://router.project-osrm.org/route/v1/driving/${coordinates}?overview=full&geometries=geojson`;
+
+
             fetch(osrmRouteUrl)
+
                 .then(response => response.json())
+
                 .then(data => {
+
+                    if (
+                        !data.routes ||
+                        data.routes.length === 0
+                    ) {
+                        return;
+                    }
+
+
                     if (routeLine) {
                         map.removeLayer(routeLine);
                     }
-                    routeLine = L.polyline(data.routes[0].geometry.coordinates.map(coord => [coord[1], coord[0]]), {color: 'blue', weight: 5}).addTo(map);
+
+
+                    routeLine = L.polyline(
+                        data.routes[0].geometry.coordinates.map(
+                            coord => [coord[1], coord[0]]
+                        ),
+                        {
+                            color: 'blue',
+                            weight: 5
+                        }
+                    ).addTo(map);
+
                 })
-                .catch(error => console.error("Error obteniendo la ruta: ", error));
+
+                .catch(
+                    error =>
+                        console.error(
+                            "Error obteniendo la ruta: ",
+                            error
+                        )
+                );
+
         }
+
+
+        // =========================================================
+        // GEOLOCALIZACIÓN
+        // =========================================================
 
         if (navigator.geolocation) {
-            navigator.geolocation.watchPosition(position => {
-                userPosition = [position.coords.latitude, position.coords.longitude];
-                if (userMarker) {
-                    userMarker.setLatLng(userPosition);
-                } else {
-                    userMarker = L.circle(userPosition, {radius: 50, color: 'red', fillColor: 'red', fillOpacity: 0.5}).addTo(map);
+
+            navigator.geolocation.watchPosition(
+
+                position => {
+
+                    userPosition = [
+                        position.coords.latitude,
+                        position.coords.longitude
+                    ];
+
+
+                    if (userMarker) {
+
+                        userMarker.setLatLng(
+                            userPosition
+                        );
+
+                    } else {
+
+                        userMarker = L.circle(
+                            userPosition,
+                            {
+                                radius: 50,
+                                color: 'red',
+                                fillColor: 'red',
+                                fillOpacity: 0.5
+                            }
+                        ).addTo(map);
+
+                    }
+
+
+                    updateRoute();
+
+                },
+
+
+                error => {
+
+                    console.error(
+                        "Error obteniendo la ubicación: ",
+                        error
+                    );
+
+                },
+
+
+                {
+                    enableHighAccuracy: true
                 }
 
-                updateRoute();
-            }, error => console.error("Error obteniendo la ubicación: ", error), { enableHighAccuracy: true });
+            );
+
         } else {
-            alert("Geolocalización no soportada");
+
+            alert(
+                "Geolocalización no soportada"
+            );
+
         }
+
     </script>
+
 </body>
 </html>
