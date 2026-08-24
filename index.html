@@ -115,26 +115,54 @@
     { coords: [13.431440518245253, -87.449773824381], name: "veprovar" }
 ];
    
-        var markers = puntos.map((point, index) => {
-            var marker = L.marker(point.coords).addTo(map);
-            marker.bindPopup(`
-                <label for='locationName${index}'>Nombre del Lugar:</label>
-                <input type='text' id='locationName${index}' value='${point.name}' oninput='updateName(${index}, this.value)'><br>
-                <button onclick='markDelivered(${index})'>Marcar como hecho</button>
-            `);
-            return marker;
+var completedPoints = JSON.parse(localStorage.getItem('completedPoints') || '[]');
+
+var markers = puntos.map((point, index) => {
+
+    var pointId = `${point.name}_${point.coords[0]}_${point.coords[1]}`;
+
+    // Si ya fue marcado como hecho, no mostramos el marcador
+    if (completedPoints.includes(pointId)) {
+        return null;
+    }
+
+    var marker = L.marker(point.coords).addTo(map);
+
+    marker.bindPopup(`
+        <label for='locationName${index}'>Nombre del Lugar:</label>
+        <input type='text' id='locationName${index}' value='${point.name}' oninput='updateName(${index}, this.value)'><br>
+        <button onclick='markDelivered(${index})'>Marcar como hecho</button>
+    `);
+
+    marker.pointId = pointId;
+
+    return marker;
+});
         });
 
         function updateName(index, name) {
             puntos[index].name = name;
         }
 
-        function markDelivered(index) {
-            if (markers[index]) {
-                map.removeLayer(markers[index]);
-                markers[index] = null;
-                updateRoute();
-            }
+   function markDelivered(index) 
+
+    if (markers[index]) {
+
+        var pointId = markers[index].pointId;
+
+        // Guardar como completado
+        completedPoints.push(pointId);
+        localStorage.setItem(
+            'completedPoints',
+            JSON.stringify(completedPoints)
+        );
+
+        // Eliminar del mapa
+        map.removeLayer(markers[index]);
+        markers[index] = null;
+
+        updateRoute();
+    }
         }
 
         var userMarker = null;
